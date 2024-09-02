@@ -3,6 +3,7 @@ from torch import nn, device, tensor, float32
 from rdkit import Chem
 from .acts import activations
 from rdkit.Chem import AllChem
+from unimol_tools import UniMolRepr
 import json
 import math
 import numpy as np
@@ -166,11 +167,6 @@ class DynamicWeightAttention(nn.Module):
 
 class Embedding(nn.Module):
     def __init__(self, num_features, act, max_atomic_number=9, device=device('cuda'), smiles=None):
-        with open('/scratch/yx2892/qm9s_processed_data.json') as f1:
-            self.qm9s_data = json.load(f1)
-        with open('/scratch/yx2892/select_data.json') as f2:
-            self.select_data = json.load(f2)
-        self.json_data = {**self.qm9s_data, **self.select_data}
         super(Embedding, self).__init__()
         self.elec = get_elec_feature(max_atomic_number=max_atomic_number, device=device)
         self.act = activations(type=act, num_features=num_features)
@@ -183,6 +179,8 @@ class Embedding(nn.Module):
         self.dynamic_attention = DynamicWeightAttention(fingerprint_dim=2048, cls_dim=512, output_dim=512)
         self.reset_parameters()
         self.smiles = smiles
+
+        self.clf = UniMolRepr(data_type='molecule', remove_hs=False)
 
     def reset_parameters(self):
         nn.init.xavier_uniform_(self.ls.weight)
@@ -228,10 +226,9 @@ class Embedding(nn.Module):
             atom_features = torch.tensor(atom_features, dtype=torch.float32).to(self.device)
             atom_supp = self.atom_supp_emb(atom_features)
             
-            cls_vector = self.json_data[smile]['cls_repr']
-            if isinstance(cls_vector, list):
-                cls_vector = torch.tensor(cls_vector, dtype=torch.float32)
-            cls_vector = cls_vector.to(self.device)
+            # Generate cls_vector using UniMolRepr
+            unimol_repr = self.clf.get_repr([smile], return_atomic_reprs=True)
+            cls_vector = torch.tensor(unimol_repr['cls_repr'][0], dtype=torch.float32).to(self.device)
             
             # Apply attention to cls_vector
             cls_vector_transformed = self.cls_attention(cls_vector.unsqueeze(0))
