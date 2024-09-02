@@ -6,8 +6,8 @@ This repository contains the code, datasets, and documentation needed to use and
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-- [Dataset & Checkpoint]
-- [Other Information]
+- [Additional Information](#additional-information)
+- [Dataset & Checkpoint](#dataset--checkpoint)
 - [License](#license)
 
 ## Installation
@@ -27,7 +27,7 @@ Here's how you can run the training script:
 python trainer.py
 
 
-## Other Information
+## Additional Information
 
 Due to version conflicts between Uni-Mol and the original DetaNet in terms of PyTorch, we recommend converting Uni-Mol representations to JSON format first. This allows for querying during training, which reduces scheduling overhead and ensures that Uni-Mol weights are compatible with our model across different versions.
 
