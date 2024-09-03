@@ -25,18 +25,19 @@ Here's how you can run the training script:
 
 ``python trainer.py``
 
+## Required Packages
 regarding the enviroment and package, we follow the original DetaNet:
-## Required Package:
-pytorch 1.10.0
-torch-geometric 2.0.2
-torch-scatter 2.0.9
-torch-cluster 1.5.9
-torch-sparse 0.6.12
-torch-spline-conv 1.2.1
-e3nn 0.4.4
-numpy 1.20.1
-matplotlib 3.3.4
+The following packages are required to run EnviroDetaNet:
 
+- `pytorch 1.10.0`
+- `torch-geometric 2.0.2`
+- `torch-scatter 2.0.9`
+- `torch-cluster 1.5.9`
+- `torch-sparse 0.6.12`
+- `torch-spline-conv 1.2.1`
+- `e3nn 0.4.4`
+- `numpy 1.20.1`
+- `matplotlib 3.3.4`
 
 ## Additional Information
 
